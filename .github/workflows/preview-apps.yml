@@ -18,4 +18,6 @@ jobs:
           PR_NUMBER: ${{ github.event.issue.number }}
         run: |
           ${{ github.workspace }}/scripts/deploy-preview-app.sh
+        run:
+          echo $PR_NUMBER
       - run: echo "🍏 This job's status is ${{ job.status }}."
