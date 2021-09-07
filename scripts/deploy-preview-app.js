@@ -5,7 +5,7 @@ const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || '';
 const GITHUB_BRANCH_NAME = process.env.GITHUB_HEAD_REF || '';
 const HASURA_PROJECT_DIR_PATH = process.env.HASURA_PROJECT_DIR_PATH || '';
 const PR_NUMBER = process.env.PR_NUMBER || '123';
-const CLOUD_DATA_GRAPHQL = process.env.CLOUD_DATA_GRAPHQL_ENDPOINT || 'https://data.lux-dev.hasura.me';
+const CLOUD_DATA_GRAPHQL_ENDPOINT = process.env.CLOUD_DATA_GRAPHQL_ENDPOINT || 'https://data.lux-dev.hasura.me';
 const GITHUB_OWNER = GITHUB_REPOSITORY.split('/')[0];
 const GITHUB_REPO_NAME = GITHUB_REPOSITORY.split('/')[1];
 
