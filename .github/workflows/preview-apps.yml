@@ -1,5 +1,9 @@
 name: Preview Apps POC
-on: [push]
+on:
+  push:
+  pull_request:
+    branches:
+      - main
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
