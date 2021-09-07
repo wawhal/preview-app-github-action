@@ -50,7 +50,7 @@ const waitForJobSuccess = (jobId, callback) => {
 			body: JSON.stringify({
 				query: `
 					query {
-						jobs (where: { id: _eq: "${jobId}"}) {
+						jobs (where: { id: { _eq: "${jobId}"}}) {
 							id
 							status
 						}
