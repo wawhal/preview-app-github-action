@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-node@v2
       - name: Debug
         uses: hmarr/debug-action@v2
-      - name: Run a random script
+      - name: Deploy Hasura Cloud preview app
         env:
           CLOUD_DATA_GRAPHQL_ENDPOINT: "https://c100-106-51-72-39.ngrok.io/v1/graphql"
           GITHUB_PAT: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
