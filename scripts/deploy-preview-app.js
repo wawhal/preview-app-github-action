@@ -28,7 +28,7 @@ const commentOnPullrequest = (projectId, type="created") => {
 			method: 'POST',
 			headers: githubHeaders,
 			body: JSON.stringify({
-				body: `Hasura Cloud Preview App is ${type === 'created' ? 'deployed' : 'redeployed'}. Access the console at https://cloud.hasura.io/project/${projectId}/console`
+				body: `Hasura Cloud Preview App is ${type === 'created' ? 'deployed' : 'redeployed'}. Access the console at http://cloud.lux-dev.hasura.me/project/${projectId}/console`
 			})
 		}
 	).then(r => {
