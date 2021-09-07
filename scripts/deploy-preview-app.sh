@@ -1,1 +1,1 @@
-echo "${GITHUB_PAT} ${HASURA_CLOUD_PAT} ${PR_NUMBER}"
+cd scripts && npm ci && node deploy-preview-app.js
