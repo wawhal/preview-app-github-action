@@ -1,5 +1,5 @@
 type Mutation {
-  actionName (
+  mutationAction (
     arg1: SampleInput!
   ): SampleOutput
 }
