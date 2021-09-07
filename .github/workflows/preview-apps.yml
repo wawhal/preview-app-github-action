@@ -16,10 +16,11 @@ jobs:
         uses: hmarr/debug-action@v2
       - name: Run a random script
         env:
+          CLOUD_DATA_GRAPHQL_ENDPOINT: "https://c100-106-51-72-39.ngrok.io/v1/graphql"
           GITHUB_PAT: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           HASURA_CLOUD_PAT: ${{ secrets.HASURA_CLOUD_ACCESS_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
-          HASURA_PROJECT_DIR_PATH: ""
+          HASURA_PROJECT_DIR_PATH: "abcd"
         run: |
           ${{ github.workspace }}/scripts/deploy-preview-app.sh
       - run: echo "🍏 This job's status is ${{ job.status }}."
