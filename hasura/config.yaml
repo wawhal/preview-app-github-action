@@ -1,0 +1,7 @@
+version: 3
+endpoint: http://preview-app-github-action-pr-4.nginx.hasura.me
+admin_secret: G4FWGzcijCqVqmUIIF3ACLqOw3go1nknOpnkIVdodXXQXk73QwvjdwZOj8u4PBXe
+metadata_directory: metadata
+actions:
+  kind: synchronous
+  handler_webhook_baseurl: http://localhost:3000

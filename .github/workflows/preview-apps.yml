@@ -20,7 +20,7 @@ jobs:
           GITHUB_PAT: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           HASURA_CLOUD_PAT: ${{ secrets.HASURA_CLOUD_ACCESS_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
-          HASURA_PROJECT_DIR_PATH: "abcd"
+          HASURA_PROJECT_DIR_PATH: "hasura"
         run: |
           ${{ github.workspace }}/scripts/deploy-preview-app.sh
       - run: echo "🍏 This job's status is ${{ job.status }}."

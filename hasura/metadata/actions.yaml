@@ -1,0 +1,16 @@
+actions:
+- name: actionName
+  definition:
+    kind: synchronous
+    handler: http://localhost:3000
+- name: queryAction
+  definition:
+    kind: ""
+    handler: http://localhost:3000
+custom_types:
+  enums: []
+  input_objects:
+  - name: SampleInput
+  objects:
+  - name: SampleOutput
+  scalars: []
