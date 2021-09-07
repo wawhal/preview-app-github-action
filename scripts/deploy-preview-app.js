@@ -42,7 +42,6 @@ const commentOnPullrequest = (projectId, type="created") => {
 
 
 const createPreviewApp = () => {
-	console.log('Creating preview app');
 	return fetch(
 		CLOUD_DATA_GRAPHQL_ENDPOINT,
 		{
@@ -114,7 +113,6 @@ const createPreviewApp = () => {
 };
 
 const recreatePreviewApp = () => {
-	console.log('Recreating preview app');
 	return fetch(
 		CLOUD_DATA_GRAPHQL_ENDPOINT,
 		{
@@ -186,8 +184,10 @@ const handlePREvent = () => {
 		}
 		if (response.data && response.data.projects) {
 			if (response.data.projects.length) {
+				console.log('Recreating preview app');
 				recreatePreviewApp();
 			} else {
+				console.log('Creating preview app');
 				createPreviewApp();
 			}
 		} else {
