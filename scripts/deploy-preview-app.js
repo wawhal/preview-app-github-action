@@ -25,7 +25,7 @@ const handlePREvent = () => {
 		{
 			method: 'POST',
 			headers: {
-				'authorization': `PAT ${HASURA_CLOUD_PAT}`,
+				'authorization': `pat ${HASURA_CLOUD_PAT}`,
 				'content-type': "application/json"
 			},
 			body: JSON.stringify({
