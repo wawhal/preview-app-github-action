@@ -8,9 +8,108 @@ const PR_NUMBER = process.env.PR_NUMBER || '123';
 const CLOUD_DATA_GRAPHQL_ENDPOINT = process.env.CLOUD_DATA_GRAPHQL_ENDPOINT || 'https://data.lux-dev.hasura.me';
 const GITHUB_OWNER = GITHUB_REPOSITORY.split('/')[0];
 const GITHUB_REPO_NAME = GITHUB_REPOSITORY.split('/')[1];
+const PREVIEW_APP_NAME = `${GITHUB_REPO_NAME}-pr-${PR_NUMBER}-`;
+
+const hasuraCloudHeaders = {
+	authorization: `pat ${HASURA_CLOUD_PAT}`,
+	'content-type': "application/json"
+};
+
+const githubHeaders = {
+	'content-type': 'application/json',
+	'authorization': `token ${GITHUB_TOKEN}`,
+	'accept': 'application/json'
+};
+
+const commentOnPullrequest = (projectId) => {
+	return fetch(
+		`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO_NAME}/issues/${PR_NUMBER}/comments`,
+		{
+			method: 'POST',
+			headers: githubHeaders,
+			body: JSON.stringify({
+				body: `Hasura Cloud Preview App is deployed. Access the console at https://cloud.hasura.io/project/${projectId}/console`
+			})
+		}
+	).then(r => {
+		if (r.status <=300) {
+			console.log('Commented successfully');
+		} else {
+			console.log('Trouble commenting');
+		}
+	})
+}
+
 
 const createPreviewApp = () => {
 	console.log('Creating preview app');
+	return fetch(
+		CLOUD_DATA_GRAPHQL_ENDPOINT,
+		{
+			method: 'POST',
+			body: JSON.stringify({
+				query: `
+					mutation createPreviewApp (
+					  $githubPAT: String!
+					  $appName: String!
+					  $githubRepoOwner: String!
+					  $githubRepo: String!
+					  $githubBranch: String!
+					  $githubDir: String!
+					  $region: String!
+					  $cloud: String!
+					  $plan: String!
+					) {
+					  createGitHubPreviewApp (
+					    payload: {
+					      githubPersonalAccessToken: $githubPAT,
+					      githubRepoDetails: {
+					        branch:$githubBranch
+					        owner: $githubRepoOwner
+					        repo: $githubRepo,
+					        directory: $githubDir
+					      },
+					      projectOptions: {
+					        cloud: $cloud,
+					        region: $region,
+					        plan: $plan,
+					        name: $appName
+					      }
+					    }
+					  ) {
+					    github_deployment_job_id
+					    projectId
+					  }
+					}
+					`,
+					variables: {
+						githubPAT: GITHUB_TOKEN,
+						appName: PREVIEW_APP_NAME,
+						githubRepoOwner: GITHUB_OWNER,
+						githubRepo: GITHUB_REPO_NAME,
+						githubBranch: GITHUB_BRANCH_NAME,
+						githubDir: HASURA_PROJECT_DIR_PATH,
+						region: "us-east-2",
+						cloud: "aws",
+						plan: "cloud_free"
+					}
+			})
+		}
+	).then(r => r.json())
+	.then(response => {
+		if (response.errors) {
+			console.log('Failed creating preview app');
+			console.log(response);
+			process.exit(1);
+		}
+		if (response.data && response.data.createGitHubPreviewApp) {
+			commentOnPullrequest(response.data.createGitHubPreviewApp.projectId);
+		} else {
+			console.log('Unexpected error');
+			console.log(response);
+			process.exit(1);
+		}
+	})
 };
 
 const recreatePreviewApp = () => {
@@ -19,19 +118,15 @@ const recreatePreviewApp = () => {
 
 const handlePREvent = () => {
 
-	const previewAppName = `${GITHUB_REPO_NAME}-pr-${PR_NUMBER}-`;
 	return fetch(
 		CLOUD_DATA_GRAPHQL_ENDPOINT,
 		{
 			method: 'POST',
-			headers: {
-				'authorization': `pat ${HASURA_CLOUD_PAT}`,
-				'content-type': "application/json"
-			},
+			headers: hasuraCloudHeaders,
 			body: JSON.stringify({
 				query: `
 					query {
-						projects (where: { name: { _eq: "${previewAppName}"}}) {
+						projects (where: { name: { _eq: "${PREVIEW_APP_NAME}"}}) {
 							id
 						}
 					}
