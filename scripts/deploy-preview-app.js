@@ -40,19 +40,19 @@ const handlePREvent = () => {
 		}
 	).then(r => r.json())
 	.then(response => {
-		console.log(response);
 		if (response.errors) {
 			console.error('Error querying the projects');
+			console.log(response);
 			process.exit(1);
 		}
 		if (response.data && response.data.projects) {
-			console.log(response);
 			if (response.data.projects.length) {
 				recreatePreviewApp();
 			} else {
 				createPreviewApp();
 			}
 		} else {
+			console.log(response);
 			console.error('Unexpected response while checking project')
 			process.exit(1);
 		}
