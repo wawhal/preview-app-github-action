@@ -25,7 +25,8 @@ const handlePREvent = () => {
 		{
 			method: 'POST',
 			headers: {
-				'authorization': `PAT ${HASURA_CLOUD_PAT}`
+				'authorization': `PAT ${HASURA_CLOUD_PAT}`,
+				'content-type': "application/json"
 			},
 			body: JSON.stringify({
 				query: `
@@ -39,6 +40,7 @@ const handlePREvent = () => {
 		}
 	).then(r => r.json())
 	.then(response => {
+		console.log(response);
 		if (response.errors) {
 			console.error('Error querying the projects');
 			process.exit(1);
