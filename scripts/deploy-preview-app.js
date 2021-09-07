@@ -75,11 +75,18 @@ const waitForJobSuccess = (jobId, callback) => {
 					console.log('Git deployment failed');
 					return
 				}
-				waitForJobSuccess(jobId, callback)
+				setTimeout(() => {
+					waitForJobSuccess(jobId, callback)
+				}, 5000)
 			} else {
-				waitForJobSuccess(jobId, callback)
+				setTimeout(() => {
+					waitForJobSuccess(jobId, callback)
+				}, 5000)
 			}
 		}
+	}).catch(e => {
+		console.log('Unexpected');
+		console.log(e);
 	})
 }
 
