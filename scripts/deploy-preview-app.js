@@ -40,6 +40,49 @@ const commentOnPullrequest = (projectId, type="created") => {
 	})
 }
 
+const waitForJobSuccess = (jobId, callback) => {
+	console.log('Waiting for GitHub deployment');
+	fetch(
+		CLOUD_DATA_GRAPHQL_ENDPOINT,
+		{
+			method: 'POST',
+			headers: hasuraCloudHeaders,
+			body: JSON.stringify({
+				query: `
+					query {
+						jobs (where: { id: _eq: "${jobId}"}) {
+							id
+							status
+						}
+					}
+				`,
+			})
+		}
+	).then(r => r.json())
+	.then(response => {
+		if (response.errors) {
+			console.log('WTF')
+			console.log(response);
+			process.exit(1);
+		}
+		if (response.data && response.data.jobs) {
+			if (response.data.jobs.length) {
+				if (response.data.jobs[0].status === 'success') {
+					callback();
+					return;
+				}
+				if (response.data.jobs[0].status === 'failed') {
+					console.log('Git deployment failed');
+					return
+				}
+				waitForJobSuccess(jobId, callback)
+			} else {
+				waitForJobSuccess(jobId, callback)
+			}
+		}
+	})
+}
+
 
 const createPreviewApp = () => {
 	return fetch(
@@ -103,7 +146,9 @@ const createPreviewApp = () => {
 			process.exit(1);
 		}
 		if (response.data && response.data.createGitHubPreviewApp) {
-			commentOnPullrequest(response.data.createGitHubPreviewApp.projectId);
+			waitForJobSuccess(response.data.createGitHubPreviewApp.github_deployment_job_id, () => {
+				commentOnPullrequest(response.data.createGitHubPreviewApp.projectId);
+			})
 		} else {
 			console.log('Unexpected error');
 			console.log(response);
@@ -144,7 +189,9 @@ const recreatePreviewApp = () => {
 			process.exit(1);
 		}
 		if (response.data && response.data.recreateGithubPreviewApp) {
-			commentOnPullrequest(response.data.recreateGithubPreviewApp.projectId, 'recreated');
+			waitForJobSuccess(response.data.recreateGithubPreviewApp.github_deployment_job_id, () => {
+				commentOnPullrequest(response.data.recreateGithubPreviewApp.projectId);
+			})
 		} else {
 			console.log('Unexpected error');
 			console.log(response);
