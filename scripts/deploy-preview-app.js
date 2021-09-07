@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 const GITHUB_TOKEN = process.env.GITHUB_PAT || '';
 const HASURA_CLOUD_PAT = process.env.HASURA_CLOUD_PAT || '';
 const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || '';
@@ -41,3 +41,5 @@ const deployPreviewApp = () => {
 	// 	}
 	// )
 }
+
+deployPreviewApp();
