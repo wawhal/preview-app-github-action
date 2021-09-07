@@ -73,6 +73,7 @@ const waitForJobSuccess = (jobId, callback) => {
 				}
 				if (response.data.jobs[0].status === 'failed') {
 					console.log('Git deployment failed');
+					process.exit(1);
 					return
 				}
 				setTimeout(() => {
