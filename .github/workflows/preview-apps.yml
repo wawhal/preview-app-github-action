@@ -1,6 +1,5 @@
 name: Preview Apps POC
 on:
-  push:
   pull_request:
     branches:
       - main

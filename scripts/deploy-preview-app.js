@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 const GITHUB_TOKEN = process.env.GITHUB_PAT || '';
 const HASURA_CLOUD_PAT = process.env.HASURA_CLOUD_PAT || '';
 const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || '';
-const GITHUB_REF = process.env.GITHUB_REF || '';
+const GITHUB_BRANCH_NAME = process.env.GITHUB_HEAD_REF || '';
 const HASURA_PROJECT_DIR_PATH = process.env.HASURA_PROJECT_DIR_PATH || '';
 const PR_NUMBER = process.env.PR_NUMBER || '123';
 const CLOUD_DATA_GRAPHQL = process.env.CLOUD_DATA_GRAPHQL || 'https://data.lux-dev.hasura.me';
@@ -11,7 +11,6 @@ const deployPreviewApp = () => {
 
 	const GITHUB_OWNER = GITHUB_REPOSITORY.split('/')[0];
 	const GITHUB_REPO = GITHUB_REPOSITORY.split('/')[1];
-	const GITHUB_BRANCH_NAME = GITHUB_REF.split('/')[2];
 
 	const PREVIEW_APP_NAME = `pr-${PR_NUMBER}`;
 	console.log(
