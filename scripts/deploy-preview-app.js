@@ -21,14 +21,14 @@ const githubHeaders = {
 	'accept': 'application/json'
 };
 
-const commentOnPullrequest = (projectId) => {
+const commentOnPullrequest = (projectId, type="created") => {
 	return fetch(
 		`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO_NAME}/issues/${PR_NUMBER}/comments`,
 		{
 			method: 'POST',
 			headers: githubHeaders,
 			body: JSON.stringify({
-				body: `Hasura Cloud Preview App is deployed. Access the console at https://cloud.hasura.io/project/${projectId}/console`
+				body: `Hasura Cloud Preview App is ${type === 'created' ? 'deployed' : 'redeployed'}. Access the console at https://cloud.hasura.io/project/${projectId}/console`
 			})
 		}
 	).then(r => {
@@ -47,6 +47,7 @@ const createPreviewApp = () => {
 		CLOUD_DATA_GRAPHQL_ENDPOINT,
 		{
 			method: 'POST',
+			headers: hasuraCloudHeaders,
 			body: JSON.stringify({
 				query: `
 					mutation createPreviewApp (
@@ -114,6 +115,49 @@ const createPreviewApp = () => {
 
 const recreatePreviewApp = () => {
 	console.log('Recreating preview app');
+	return fetch(
+		CLOUD_DATA_GRAPHQL_ENDPOINT,
+		{
+			method: 'POST',
+			headers: hasuraCloudHeaders,
+			body: JSON.stringify({
+				query: `
+					mutation redeploy ($appName: String!) {
+					  recreateGithubPreviewApp (
+					    payload: {
+					      appName: $appName
+					    }
+					  ) {
+					    github_deployment_job_id
+					    projectId
+					  }
+					}
+				`,
+					variables: {
+						appName: PREVIEW_APP_NAME,
+					}
+			})
+		}
+	).then(r => r.json())
+	.then(response => {
+		if (response.errors) {
+			console.log('Failed recreating preview app');
+			console.log(response);
+			process.exit(1);
+		}
+		if (response.data && response.data.recreateGithubPreviewApp) {
+			commentOnPullrequest(response.data.recreateGithubPreviewApp.projectId, 'recreated');
+		} else {
+			console.log('Unexpected error');
+			console.log(response);
+			process.exit(1);
+		}
+	})
+	.catch(e => {
+		console.log('Unexpected error');
+		console.log(e);
+		process.exit(1);
+	})
 }
 
 const handlePREvent = () => {
