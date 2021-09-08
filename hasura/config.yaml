@@ -1,6 +1,6 @@
 version: 3
-endpoint: http://preview-app-github-action-pr-4.nginx.hasura.me
-admin_secret: G4FWGzcijCqVqmUIIF3ACLqOw3go1nknOpnkIVdodXXQXk73QwvjdwZOj8u4PBXe
+endpoint: http://preview-app-github-action-pr-8.nginx.hasura.me
+admin_secret: 0PACCIwM0tNV6Um9F88uaJiA4hz46ZNmVPtGklMDssW7xJz7GKVyKs9HNNSMccpb
 metadata_directory: metadata
 actions:
   kind: synchronous
