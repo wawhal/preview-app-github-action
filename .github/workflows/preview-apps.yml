@@ -16,7 +16,7 @@ jobs:
         uses: hmarr/debug-action@v2
       - name: Deploy Hasura Cloud preview app
         env:
-          CLOUD_DATA_GRAPHQL_ENDPOINT: "https://c100-106-51-72-39.ngrok.io/v1/graphql"
+          CLOUD_DATA_GRAPHQL_ENDPOINT: "https://4f84-106-51-72-39.ngrok.io/v1/graphql"
           GITHUB_PAT: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           HASURA_CLOUD_PAT: ${{ secrets.HASURA_CLOUD_ACCESS_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}

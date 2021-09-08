@@ -1,12 +1,26 @@
-type Mutation {
-  mutationAction (
+type Query {
+  getCurrentWeather (
     arg1: SampleInput!
   ): SampleOutput
 }
 
 
 type Query {
-  queryAction (
+  getUserInfo (
+    arg1: SampleInput!
+  ): SampleOutput
+}
+
+
+type Mutation {
+  login (
+    arg1: SampleInput!
+  ): SampleOutput
+}
+
+
+type Mutation {
+  signup (
     arg1: SampleInput!
   ): SampleOutput
 }
